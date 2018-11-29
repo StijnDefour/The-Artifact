@@ -9,12 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import clyde.and.bonie.theartifact.qrscanner.QrScanner;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 
 
 public class Dashboard extends AppCompatActivity {
 
-    QrScanner qrscanner;
     Activity activity;
 
     @Override
@@ -22,25 +23,40 @@ public class Dashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        qrscanner = new QrScanner();
-
         Button btn_scan = findViewById(R.id.btn_scan);
         activity = this;
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                qrscanner.startQRScan(activity);
+                IntentIntegrator integrator = new IntentIntegrator(activity);
+                integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+                integrator.setPrompt("Scan");
+                integrator.setCameraId(0);
+                integrator.setBeepEnabled(true);
+                integrator.setBarcodeImageEnabled(false);
+                integrator.initiateScan();
             }
         });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        //super.onActivityResult(requestCode, resultCode, data);
 
-        String scanned = qrscanner.QrOnActivityResult(requestCode,resultCode,data);
-        if (!scanned.equals("")) {
-            Log.d("test", scanned);
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                Log.d("Create Report", "Canceled scan");
+            } else {
+                Log.d("Create Report", "Scanned");
+                Log.d("test",result.getContents());
+
+                // Intent intent = new Intent(activity, SuplyDetail.class);
+                // intent.putExtra("scanned_suply", result.getContents());
+                // startActivity(intent);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 }
