@@ -1,4 +1,4 @@
-package clyde.and.bonie.theartifact;
+package clyde.and.bonie.theartifact.qrscanner;
 
 import android.app.Activity;
 import android.content.Intent;
