@@ -25,13 +25,13 @@ public class QrScanner {
         if (result != null) {
             if (result.getContents() == null) {
                 Log.d("Create Report", "Canceled scan");
-                return "cancelled";
+                return "";
             } else {
                 Log.d("Create Report", result.getContents());
                 return result.getContents();
             }
         } else {
-            return "null";
+            return "";
         }
     }
 }

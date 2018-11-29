@@ -2,4 +2,5 @@
     <string name="app_name">The Artifact</string>
     <string name="com_auth0_client_id">km5vlAJ8kgQAtbucvAyzUgkakxRj5ajv</string>
     <string name="com_auth0_domain">hackthefuturemobile.eu.auth0.com</string>
+    <string name="scan_button">Scan</string>
 </resources>
