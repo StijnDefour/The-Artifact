@@ -29,15 +29,24 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     private Auth0 auth0;
     private Button button;
+    OkHttpClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        client = new OkHttpClient();
 
         auth0 = new Auth0(this);
         auth0.setOIDCConformant(true);
@@ -72,62 +81,17 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(@NonNull final Credentials credentials) {
                         Log.d("test", "-------------------------------");
                         Log.d("test", credentials.getAccessToken());
-
-                        AsyncTask.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Create URL
-                                try {
-                                    URL apiEndpoint = new URL("https://htf2018.now.sh/users");
-
-                                    // Create connection
-                                    HttpsURLConnection myConnection =
-                                            (HttpsURLConnection) apiEndpoint.openConnection();
-                                    myConnection.addRequestProperty("Authorization", "Bearer " + credentials.getAccessToken());
-
-                                    if (myConnection.getResponseCode() == 200) {
-                                        Log.d("test", "gelukt");
-
-                                        InputStream responseBody = myConnection.getInputStream();
-                                        InputStreamReader responseBodyReader =
-                                                new InputStreamReader(responseBody, "UTF-8");
-                                        JsonReader jsonReader = new JsonReader(responseBodyReader);
-
-
-
-                                        /*jsonReader.beginArray();
-                                        while (jsonReader.hasNext()) {
-                                            jsonReader.beginObject();
-                                            while (jsonReader.hasNext()) {
-                                                String name = jsonReader.toString();
-                                                String email = "";
-                                                if (name.equals("email")) {
-                                                    email = name;
-                                                } else {
-                                                    jsonReader.skipValue();
-                                                }
-                                                Log.d("test", name);
-                                            }
-                                            jsonReader.endObject();
-                                        }
-                                        jsonReader.endArray();
-
-                                        jsonReader.close();*/
-                                        myConnection.disconnect();
-                                    } else {
-                                        Log.d("test", "error");
-                                    }
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-
-
-                            }
-                        });
+                        getUsers(credentials.getAccessToken( ));
                     }
                 });
     }
+
+    private void getUsers(String user_id) {
+        OkHttpCall call = new OkHttpCall();
+        call.get("users", user_id);
+    }
+
+
 
 
 }
