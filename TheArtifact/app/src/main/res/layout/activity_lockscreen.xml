@@ -30,6 +30,7 @@
         android:ems="10"
         android:enabled="false"
         android:inputType="textPassword"
+        android:maxLength="10"
         android:textAlignment="center"
         android:textSize="50sp"
         app:layout_constraintBottom_toTopOf="@+id/tableLayout"

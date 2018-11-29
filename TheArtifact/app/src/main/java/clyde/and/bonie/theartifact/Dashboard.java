@@ -39,6 +39,11 @@ public class Dashboard extends AppCompatActivity {
         });
     }
 
+    public void newReport(View view) {
+        Intent intent = new Intent(this, ReportActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
