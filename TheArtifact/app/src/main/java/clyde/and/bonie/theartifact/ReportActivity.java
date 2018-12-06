@@ -21,6 +21,12 @@ import com.auth0.android.provider.AuthCallback;
 import com.auth0.android.provider.WebAuthProvider;
 import com.auth0.android.result.Credentials;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import okhttp3.Call;
+
 public class ReportActivity extends AppCompatActivity {
     private Auth0 auth0;
 
@@ -30,6 +36,10 @@ public class ReportActivity extends AppCompatActivity {
         setContentView(R.layout.activity_report);
 
         getLocation();
+
+        auth0 = new Auth0(this);
+        auth0.setOIDCConformant(true);
+        login();
     }
 
     private void getLocation() {
@@ -37,13 +47,16 @@ public class ReportActivity extends AppCompatActivity {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             try {
-                Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                double longitude = location.getLongitude();
-                double latitude = location.getLatitude();
-                EditText e_long = findViewById(R.id.txtLongtitude);
-                EditText e_lat = findViewById(R.id.txtLatitude);
-                e_long.setText(String.valueOf(longitude));
-                e_lat.setText(String.valueOf(latitude));
+                Location location;
+                if (lm != null) {
+                    location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    double longitude = location.getLongitude();
+                    double latitude = location.getLatitude();
+                    EditText e_long = findViewById(R.id.txtLongtitude);
+                    EditText e_lat = findViewById(R.id.txtLatitude);
+                    e_long.setText(String.valueOf(longitude));
+                    e_lat.setText(String.valueOf(latitude));
+                }
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -73,5 +86,15 @@ public class ReportActivity extends AppCompatActivity {
     private void getUsers(String user_id) {
         OkHttpCall call = new OkHttpCall();
         call.get("users", user_id);
+
+        /*try {
+            JSONArray jsonArray = new JSONArray(users);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject explrObject = jsonArray.getJSONObject(i);
+                Log.d("test", explrObject.getString("email"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }*/
     }
 }

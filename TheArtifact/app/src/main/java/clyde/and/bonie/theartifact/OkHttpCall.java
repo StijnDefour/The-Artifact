@@ -1,6 +1,7 @@
 package clyde.and.bonie.theartifact;
 
 import android.util.Log;
+import android.widget.Spinner;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +41,7 @@ public class OkHttpCall {
         return call;
     }
 
-    void get(String route, String token) {
+    public void get(final String route, String token) {
         OkHttpCall call = new OkHttpCall();
         Call myCall = call.get("https://htf2018.now.sh/" + route, token, new Callback() {
             @Override
@@ -54,15 +55,6 @@ public class OkHttpCall {
                     responseStr = response.body().string();
                     Log.d("test", "Successful response: " + responseStr);
                     status = RequestStatus.Successful;
-
-                    try {
-                        JSONArray jsonArray = new JSONArray(responseStr);
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject explrObject = jsonArray.getJSONObject(i);
-                            Log.d("test",explrObject.getString("email"));
-                        }
-                    } catch (JSONException e) {}
-
                 } else {
                     status = RequestStatus.Unsuccessful;
                 }
